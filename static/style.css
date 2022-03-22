@@ -1,0 +1,104 @@
+html {
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+textarea {
+  font-size: 10pt;
+  font-family: 'Lucida Console', 'Courier New', Courier, monospace;
+  height: 290px; 
+  width: 390px;
+  scroll-behavior: auto;
+}
+
+.theme {
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+input[type=file]::file-selector-button {
+  border: 2px solid #016ABC;
+  padding: .2em .4em;
+  border-radius: .2em;
+  background-color: #a29bfe;
+  transition: 1s;
+  font-size: 16pt;
+}
+
+/* input[type=file]::file-selector-button:hover {
+  background-color: #81ecec;
+  border: 2px solid #00cec9;
+} */
+
+.monospace {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.uriTextArea {
+  font-size: 10pt;
+  font-family: 'Lucida Console', 'Courier New', Courier, monospace;
+  height: 75px; 
+  width: 390px;
+  scroll-behavior: auto;
+}
+.disabled-section{
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.section-heading {
+  font-size: 24pt;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  text-decoration: underline;
+}
+
+.section-heading2 {
+  font-size: 18pt;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans';
+}
+
+.link {
+  font-size: 16pt;
+  font-weight: bold;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+.page-heading{
+  font-size: 40pt;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  text-decoration: underline;
+}
+
+
+
+input {
+  font-size: 9pt;
+}
+
+.form-submit-button {
+    background: #016ABC;
+    color: #fff;
+    border: 1px solid #eee;
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px #eee;
+    text-shadow: none;
+    height: 50px;
+    width: 150px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 16pt;
+  }
+  .form-submit-button:hover {
+    background: #4d96d0;   
+    color: #fff;
+    border: 1px solid #eee;
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px #eee;
+    height: 50px;
+    width: 150px;
+    text-shadow: none;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 16pt;
+  }
+  .clear {
+    color: transparent;
+  }
+  input {
+    font-size: 16pt;
+  }
+

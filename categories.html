@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Detector List (Categories)</title>
+    <style>
+        .clear {
+            color: transparent;
+        }
+        pre {
+          font-size: x-large;
+        }
+    </style>
+  </head>
+  
+  <body>
+    <table width="75%">
+      <tr>
+        <td style="text-align:left">
+          <a href="./index.html">
+            <img src="./static/logo.png" style="width: 100px;" />
+          </a>
+        </td>
+        <td style="text-align:left">
+          <label style="font-size:24pt;text-decoration: underline;"> Solidity Vulnerabilities Covered By Slither (Detector List) </label> 
+          <br>
+        </td>
+        <td style="text-align:right">
+          <a href="https://blog.trailofbits.com/2018/10/19/slither-a-solidity-static-analysis-framework/" target="_blank">Slither/Crytic / Trail Of Bits Blog</a>
+          <br>
+          <a href="https://github.com/crytic/slither" target="_blank">Slither/Crytic Suite Github</a>
+          <br>
+        </td>
+      </tr>
+    </table>
+      <table>
+        <tr>
+          <td>
+&nbsp;&nbsp;&nbsp;
+          </td>
+          <td>
+            <pre id="preTag1"></pre>
+          </td>
+        </tr>
+      </table>
+    
+    <script>
+
+
+      //const lblMsg = document.getElementById("lblMsg");
+      const preTag1 = document.getElementById("preTag1");
+
+
+      async function fetchcategoriesJSON() {
+                const response = await fetch('http://localhost:8080/getcategories');
+                const categories = await response.json();
+                return categories;
+            }
+
+            fetchcategoriesJSON().then(categories => {
+                //console.log(categories); 
+
+                var jsonStringified = JSON.stringify(categories);
+
+                var jsonObj = categories;
+              
+                var stdoutText = categories.output;
+
+                console.log(stdoutText);
+
+                preTag1.innerText = stdoutText;
+
+                //preTag1.innerText = JSON.stringify(categories);
+            });
+
+      const initialize = async () => {
+        try {
+
+            //fetch('http://localhost:8080/getcategories')
+ 
+            
+
+
+          //selectedFile.value = '';
+
+          //uploadForm.addEventListener('submit', uploadFile);
+
+          //var httpRequest = new XMLHttpRequest();
+        //   function uploadFile(event) {
+        //     event.preventDefault();
+
+        //     var data = new FormData(document.getElementById("uploadForm"));
+
+            // httpRequest.onreadystatechange = checkResponse;
+            // httpRequest.open("GET", "http://localhost:8080/getcategories");
+            // httpRequest.send(data);  
+
+          //}
+
+        //   function checkResponse() {
+
+        //     if (httpRequest.readyState == 4)
+        //     {
+        //       var rawText = httpRequest.response.toString();
+        //     }
+
+        //   }
+
+        }
+        catch(error) { 
+          console.log(error);
+        }
+      }
+
+      window.addEventListener('DOMContentLoaded', initialize);
+
+
+    </script>
+  </body>
+</html>

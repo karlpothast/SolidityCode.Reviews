@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>SolidityCode.Reviews</title>
+    <link rel="stylesheet" href="./static/style.css">
+  </head>
+<body>
+  <div style="padding-bottom: 25px;">
+    <table style="width:75%">
+      <tr>
+        <td>
+          <a href="./index.html">
+              <img src="./static/eth-logo.png" style="width: 100px;" />
+          </a>
+        </td>
+        <td>
+          <a href="https://www.trailofbits.com/products" target="_blank">
+            <img src="./static/slither-logo.png" style="width: 140px;"  />
+          </a>
+        </td>
+        <td style="text-align: left;">
+          <span class="page-heading">
+            Solidity Analyzer
+          </span>
+          <br>
+          <span class="section-heading2">
+            with the Slither/Crytic framework
+          </span>         
+        </td>
+        <td style="text-align:right">
+          <span style="font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; font-size:16pt">
+            <a href="./categories.html" target="_blank">Solidity Vulnerabilities Covered</a>
+            <br>
+            <img src="./static/github-logo.png" width="24px">
+            <a href="https://github.com/trailofbits/eth-security-toolbox/" target="_blank">
+              Eth Security Toolbox</a>
+              <br>
+            <a href="#divCode"> Analyze Code Directly</a>
+            <br>
+            <a href="#divUri"> Analyze With Contract Address</a>
+          </span>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div id="divBody">
+    <table style="width: 75%; border:black; border-width:0px; border-style:solid; border-spacing: 0; ">
+      <tr>
+        <td style="width: 33%; height: 1000px; border:gray; border-width:1px; border-style:solid; vertical-align:top; ">
+          <div>
+              <table>
+                <tr>
+                  <td>
+                    <span class="section-heading">
+                      Upload Solidity file (.sol) :
+                    </span>
+                    <br><br>
+                    <div style="border-style:solid; border-color:gray; border-width:1px; height:125px; width: 375px; padding: 3px;">
+                      <form id="uploadForm" enctype="multipart/form-data" method="post">
+                        <input type="file" name="selectedFile" id="selectedFile" />
+                        <br><br>
+                        <table style="width:80%">
+                          <tr>
+                            <td style="text-align: center;">
+                              <input type="submit" accept=".sol" value="Upload File" class="form-submit-button" />
+                            </td>
+                          </tr>
+                        </table>               
+                      </form>
+                    </div>
+                    <br>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div>
+                      <div>
+                        <label id="lblCompiler" style="font-size: 16pt; font-weight: bold; "></label>
+                        <!-- <label id="lblFile" style="font-size: 14pt; font-weight: bold; "></label> -->
+                      </div>
+                      <label id="lblMsg"></label>
+                      <span id="referencesHeader" style="font-size: 16pt; font-weight: bold; text-decoration: underline;"></span>
+                      <span id="referenceList" style="font-size: 14pt; font-weight: normal;"></span><br>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 33%;  border:gray; border-width:1px; border-style:solid;vertical-align:top">
+          <div class="disabled-section" id="divCode">
+            <table>
+              <tr>
+                <td>
+                  <span class="section-heading">
+                    Solidity Code Direct :
+                  </span>
+                  <br><br>
+                  <textarea placeholder="Paste solidity code here.. "></textarea>
+                </td>
+              </tr>
+              <tr>
+                <td style="align-content: center; text-align:center">
+                  <form>
+                    <button class="form-submit-button">Submit Code</button>
+                  </form>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </td>
+      </tr>
+
+ 
+      <tr>
+        <td style="width: 33%;  border:gray; border-width:1px; border-style:solid; vertical-align:top">
+
+          <div class="disabled-section" id="divUri">
+
+            <table>
+              <tr>
+                <td>
+
+                  <span class="section-heading">
+                    Ethereum Contract URI :
+                  </span>
+                  <br><br>
+                  <textarea class="uriTextArea" placeholder="Paste link to Address/Txn Hash/Block/Token/Ens"></textarea>
+
+                </td>
+              </tr>
+              <tr>
+                <td style="align-content: center; text-align:center">
+                  <form>
+                    <br>
+                    <button class="form-submit-button">Submit URI</button>
+                  </form>
+                </td>
+              </tr>
+            </table>
+
+          </div>
+
+        </td>
+
+      </tr>
+    </table>
+  </div>
+  <script>
+      const uploadForm = document.getElementById('uploadForm');
+      const selectedFile = document.getElementById("selectedFile");
+      const lblCompiler = document.getElementById("lblCompiler");
+      // const lblFile = document.getElementById("lblFile")
+      const referencesHeader = document.getElementById("referencesHeader")
+      const referenceList = document.getElementById("referenceList");
+      var analysisResultsJson = "";
+      var jsonAnalysisObj;
+      const diagnosticsOn = true;
+
+      const initialize = async () => {
+        try {
+          selectedFile.value = '';
+          uploadForm.addEventListener('submit', uploadFile);
+          var httpRequest = new XMLHttpRequest();
+          function uploadFile(event) {
+            event.preventDefault();
+            var data = new FormData(document.getElementById("uploadForm"));
+            httpRequest.onreadystatechange = checkResponse;
+            httpRequest.open("POST", "https://web3api.tools/uploadfile");
+            httpRequest.send(data);  
+          }
+
+          function checkResponse() {
+            if (httpRequest.readyState == 4) {
+
+              //clear form
+              lblCompiler.innerHTML = "";
+              lblMsg.innerHTML = "";
+              referenceList.innerHTML ="";
+              referencesHeader.innerHTML = "";
+              
+              var rawText = httpRequest.response.toString();
+
+              if (diagnosticsOn){
+                console.log("raw text : /n"+ rawText)
+              }
+
+              var showErrorMsg = ""
+              if (rawText.toString().includes("USE_VERSION: Invalid version '^0.8.10;")){
+                showErrorMsg = "Coompilation Error : version 0.8.10 not yet available. Please lower to version 0.7.0 or lower." ;
+                lblCompiler.innerHTML = showErrorMsg;
+                return;
+                //other errors
+                //No visibility specified. Did you intend to add \"public\"?
+              }
+              if (rawText.toString().includes("No visibility specified. Did you intend to add")){
+                showErrorMsg = "Compilation Error : No visibility specified. Did you intend to add \"public\"" ;
+                lblCompiler.innerHTML = showErrorMsg;
+                return;
+              }
+              var rootJson = JSON.parse(rawText);
+         
+              var fullJSONString = JSON.stringify(rawText);
+              var fullJSONObj =JSON.parse(fullJSONString);
+              const res = JSON.parse(rawText);
+              var jsonAnalysisString = res.analysis_results_json.toString();
+              var jsonAnalysisStartPos = jsonAnalysisString.indexOf('{"');
+              var jsonAnalysisStringFormatted = jsonAnalysisString.substr(jsonAnalysisStartPos);
+
+
+              const jsonAnalysis = JSON.parse(jsonAnalysisStringFormatted);
+              const regexp = new RegExp('Reference: ','g');
+              let match;
+              var references = "";
+
+              while ((match = regexp.exec(rawText)) !== null) {
+                let textAfterMatch = rawText.substr(regexp.lastIndex);
+                let linkStart = textAfterMatch.indexOf("http");
+                let textAfterLinkMatch = textAfterMatch.substr(linkStart);
+                let linkEnd = textAfterLinkMatch.indexOf("\\u");
+                let linkText = textAfterLinkMatch.substr(linkStart, linkEnd);
+                references += "<br><a href='" + linkText + "' target='_blank'>" + linkText + "</a>";
+              }
+          
+              var compilerTextStart = rawText.indexOf("Switched global version to ");
+              var restOfString = rawText.substr(compilerTextStart);
+              var nextLineBreakAfterCompilerText = restOfString.indexOf("\\n"); 
+              var compilerVersionText = restOfString.substr(0, nextLineBreakAfterCompilerText);
+              var formattedCompilerVersionText = compilerVersionText.replace("Switched global version to ", "Solidity Compiler Used For Analysis : ");
+              if (formattedCompilerVersionText) 
+              {
+                 var compileTextSplit = formattedCompilerVersionText.split(":");
+                 compileTextSplit[1]
+                 var finalCompilerHTML = compileTextSplit[0] + " : <span style='color:royalblue; font-size:18pt'>" + compileTextSplit[1] + "</span>";
+                 lblCompiler.innerHTML = finalCompilerHTML;
+               }
+
+              //remove output of sol-select - needs updated in sh
+              fullJSONString = fullJSONString.replace(compilerVersionText, "");
+              fullJSONObj = JSON.parse(fullJSONString);    
+        
+              const data = jsonAnalysis;
+              var success = data.success;
+              var error = data.error;
+              var results = data.results;
+              var detectors = results.detectors;
+              let detectorArray;
+              if (detectors) {
+                detectorArray = detectors;
+              }
+              var solidityCompiler = "";
+              var filename = "";
+              var issueDescriptions = "";
+              var mainString = "";
+              var detectorType = "";
+              var detectorStringId = "";
+              var criticality = "";
+              
+              var ctr = 1;
+              if (detectorArray)
+              {              
+              for (const detector of detectorArray) {
+                var detectorElements = detector.elements;
+                for (const detectorElement of detectorElements) {
+                  detectorStringId = detector.check;
+                  detectorType = detectorElement.type + "/" +  detectorElement.name;
+                  criticality = detector.impact;
+                  if (detectorElement.type == "pragma"){
+                    solidityCompiler = detectorElement.name;
+                    filename = detectorElement.source_mapping.filename_short;
+                  }
+                }
+              
+              //format code location
+              var detectorDescriptionTxt = detector.description;
+              var fileOpenParenIndex = detectorDescriptionTxt.toString().indexOf("(files/");
+              var fileClosedParenIndex = "";
+              var fileAndLineNumberText = "";
+              var detectorDescriptionFormatted = "";
+              // detector/category type
+              if (fileOpenParenIndex > 0) {
+                fileClosedParenIndex = detectorDescriptionTxt.toString().substr(fileOpenParenIndex).indexOf(")");
+                fileAndLineNumberText = detectorDescriptionTxt.substr(fileOpenParenIndex, fileClosedParenIndex + 1);
+                detectorDescriptionFormatted = detectorDescriptionTxt.replace(fileAndLineNumberText,"");
+                fileAndLineNumberText = fileAndLineNumberText.replace("files/","").replace("#"," line:");
+                fileAndLineNumberText = fileAndLineNumberText.replace("(","").replace(")","");
+              }
+              else { 
+                detectorDescriptionFormatted = detectorDescriptionTxt; 
+              }
+
+              issueDescriptions += "<div class='monospace'>";
+              issueDescriptions += "(" + ctr.toString() + ") " + "Description &nbsp;&nbsp;: ";
+              issueDescriptions += "<span style='font-weight:bold'>" + detectorDescriptionFormatted + "</span>"
+              issueDescriptions += "<br>";
+              issueDescriptions += "&nbsp;&nbsp;&nbsp; Type/Category : ";
+              issueDescriptions += "<span style='font-weight:normal'>" + detectorStringId + " (" + detectorType + ")" + "</span>";
+              issueDescriptions += "<br>";
+              issueDescriptions += "&nbsp;&nbsp;&nbsp; Criticality  &nbsp;&nbsp;: ";
+              if (criticality == "High") {
+                issueDescriptions += "<span style='font-weight:bold; color:red'>" + criticality + "</span>";
+              } else {
+                issueDescriptions += "<span style='font-weight:normal'>" + criticality + "</span>";
+              }
+              if (fileAndLineNumberText) {
+                issueDescriptions += "<br>";
+                issueDescriptions += "&nbsp;&nbsp;&nbsp; File/Line #  &nbsp; : ";
+                issueDescriptions += "<span style='font-size:12pt; color:navy'>" + fileAndLineNumberText + "</span>";
+              }
+              issueDescriptions += "</div>";
+              issueDescriptions += "<br>";
+              ctr += 1;
+            }
+
+          }
+              let detectorsArrayLength;
+              if (detectors) {
+                detectorsArrayLength = detectors.length;
+              }
+          
+              lblMsg.innerHTML += "<br> <span style='text-decoration:underline; font-size:16pt;'>Issues Found</span> :  ";
+              lblMsg.innerHTML += "<span style='font-weight:bold; font-size:18pt; color:red'> " + detectorsArrayLength + "</span>";
+              lblMsg.innerHTML += "<br>";
+              lblMsg.innerHTML += "<br>" + issueDescriptions;
+
+            if (referenceList) {
+              referencesHeader.innerText = "References";
+              referenceList.innerHTML = references;
+            }
+
+            }
+          }
+
+        }
+        catch(error) { 
+          
+        }
+      }
+
+      window.addEventListener('DOMContentLoaded', initialize);
+
+      var lblMsg = document.getElementById("lblMsg");
+
+  
+
+</script>
+
+
+
+</body>
+</html>
+
