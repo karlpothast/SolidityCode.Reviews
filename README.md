@@ -22,6 +22,7 @@ https://hub.docker.com/repository/docker/karlpothast/slither-web-interface
 [Etherscan page]: https://etherscan.io/address/0x863df6bfa4469f3ead0be8f9f2aae51c91a907b4#code
 
 ### 3. Slither Scan Results
+> __The solidity compiler (solc) will change dynamically based on the file being analyzed__
 
 As you can see below the Parity Wallet code analysis did not fare too well.  90 total issues were found although many were informational or recommendations.
 
