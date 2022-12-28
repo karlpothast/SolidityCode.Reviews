@@ -2,9 +2,9 @@
 Smart Contract Analyzer using Docker, Go, Slither and the Solidity Compiler.      
 https://SolidityCode.Reviews   
 
-Docker Image        
-https://hub.docker.com/repository/docker/karlpothast/slither-web-interface
-
+Get Docker Image        
+https://hub.docker.com/repository/docker/karlpothast/soliditycodereviews
+docker pull karlpothast/soliditycodereviews:latest
 ---
 
 ### 1. Navigate to https://SolidityCode.Reviews
